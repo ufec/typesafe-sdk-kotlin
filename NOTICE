@@ -1,0 +1,81 @@
+Attribution Notice
+==================
+
+This project is a **Kotlin port of the official TypeSafe JavaScript SDK**.
+
+Upstream work
+-------------
+
+    Name:    @typesafe-ai/sdk
+    Version: 0.6.0
+    Author:  evinism
+    Repo:    https://github.com/typesafe-ai/typesafe-sdk-js
+    License: MIT
+
+
+Licensing and compliance
+------------------------
+
+Upstream is released under the MIT license. MIT permits use, copying,
+modification, merging, publication, distribution, sublicensing, and/or sale of
+copies of the software, so this Kotlin port and its redistribution are
+permitted.
+
+The **only condition** MIT imposes is that the copyright notice above and this
+permission notice be included in all copies or substantial portions of the
+software.
+
+The `LICENSE` file in this repository is therefore **a compliance requirement,
+not a formality**: it retains the upstream `Copyright (c) 2026 TypeSafe`.
+**Do not delete, replace, or relicense it.**
+
+
+Scope of the port
+-----------------
+
+Ported 1:1 from upstream:
+
+- `TypeSafeClient` -- request construction, response parsing, and the
+  status-code-to-exception-type mapping
+- `TypeSafeConfig` -- configuration fields and construction-time validation
+- `Types` -- request and response data structures (including `ModelCard`)
+- `RetryPolicy` and the retry/backoff logic
+- `TypeSafeException` and its subtypes
+- Log level filtering and redaction of sensitive headers (`authorization`,
+  `proxy-authorization`, `x-api-key`)
+
+Added on the Kotlin/Android side, with no upstream counterpart:
+
+- `ProxySpec` -- HTTP and SOCKS5 proxying. Ktor's `ProxyConfig` carries no
+  credentials (on the JVM it is `java.net.Proxy`), so proxy authentication drops
+  down to OkHttp's `proxyAuthenticator` to answer the 407 challenge
+- An `expect`/`actual` `defaultHttpClient`, because the HTTP engine is
+  platform-specific
+- Kotlin naming for fields such as `ModelCard.releaseDate`, which maps 1:1 onto
+  the upstream `release_date`
+
+Behaviours **deliberately preserved** from upstream: every failure path has the
+same semantics, including the status-code-to-exception mapping table. Changing
+those would make error handling diverge between the two SDKs, which defeats the
+purpose of a port.
+
+
+Dependency footprint
+--------------------
+
+This library does not depend on any application code. Its only dependencies are:
+
+    kotlinx-serialization-json
+    kotlinx-coroutines-core
+    ktor-client-core
+    ktor-client-okhttp
+
+The default `baseUrl` (`https://api.typesafe.ai`) comes from upstream and is the
+official endpoint for that service.
+
+
+Contact
+-------
+
+Upstream issues: https://github.com/typesafe-ai/typesafe-sdk-js
+Issues with this port: this repository.

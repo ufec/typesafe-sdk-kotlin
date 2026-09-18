@@ -1,0 +1,46 @@
+name: Check
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # The Gradle build needs a matching Android platform installed. Licenses are
+      # accepted by default on GitHub runners, and AGP downloads anything else it
+      # needs (build-tools, platform-tools) on its own.
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager 'platforms;android-37'
+
+      - name: Build and run the test suite
+        run: ./gradlew build --stacktrace --console=plain
+
+      - name: Verify the artifacts can be published
+        run: ./gradlew publishToMavenLocal --console=plain
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: build/reports/tests/
+          if-no-files-found: ignore

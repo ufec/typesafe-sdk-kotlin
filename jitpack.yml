@@ -1,0 +1,7 @@
+# JitPack build configuration.
+#
+# AGP 9 requires a JDK 17 or newer toolchain, and Gradle needs a matching JDK
+# available in the build image to satisfy it (there is no toolchain resolver
+# configured, so Gradle will not download one on its own).
+jdk:
+  - openjdk17
