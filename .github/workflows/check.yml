@@ -43,6 +43,9 @@ jobs:
           sdkmanager --install 'platforms;android-37.0'
           sdkmanager --list_installed | grep -F 'platforms;android-37.0'
 
+      # `build` covers every project, so this also compiles :examples. That matters
+      # for the same reason the upstream SDK lists `examples` in its tsconfig
+      # include list: an example that is not compiled rots.
       - name: Build and run the test suite
         run: ./gradlew build --stacktrace --console=plain
 

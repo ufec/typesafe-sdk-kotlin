@@ -13,6 +13,7 @@ A longer walkthrough of the Kotlin SDK. For a minimal example, see the
 - [Proxies](#proxies)
 - [Logging](#logging)
 - [Errors](#errors)
+- [Running the example](#running-the-example)
 - [Differences from the JavaScript SDK](#differences-from-the-javascript-sdk)
 
 ## Creating a client
@@ -271,6 +272,24 @@ try {
 }
 ```
 
+## Running the example
+
+`examples/` is a small JVM application that uses this library the way a consumer
+would. It is the counterpart of the upstream JavaScript SDK's `npm run demo`:
+
+```sh
+export TYPESAFE_API_KEY=ts_...
+./gradlew :examples:run
+```
+
+It depends on the project in this repository rather than on a published
+coordinate, so it always exercises the current source. The upstream demo imports
+from `../src` for the same reason.
+
+Because it is a JVM target, it runs with an ordinary JDK and needs no device or
+emulator. It is also compiled by `./gradlew build`, so it cannot fall behind the
+API without the build going red.
+
 ## Differences from the JavaScript SDK
 
 | | JavaScript SDK | This SDK |
@@ -281,7 +300,7 @@ try {
 | Answer typing | Inferred with TypeScript conditional types | Bound to a `QuestionId`, checked at runtime |
 | Unexpected answer keys | Coerced into a record | Rejected with `TypeSafeException` |
 | Proxy support | Not in the portable core | `ProxySpec` with HTTP and SOCKS5 |
-| HTTP engine | Environment-dependent | OkHttp on Android |
+| HTTP engine | Environment-dependent | OkHttp on Android and the JVM |
 | `Retry-After` as an HTTP date | `Date.parse` | Hand-rolled RFC 1123 parser |
 
 Anything not listed above keeps upstream's semantics on purpose, including the

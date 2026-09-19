@@ -18,5 +18,10 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
 [plugins]
+# Note: do NOT declare org.jetbrains.kotlin.jvm here. Applying
+# kotlin.multiplatform in the root project already puts the Kotlin Gradle Plugin
+# on the build classpath, and requesting a versioned alias for a sibling plugin
+# from that same plugin fails with "already on the classpath with an unknown
+# version". The examples project applies it by bare id instead.
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

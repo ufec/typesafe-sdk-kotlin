@@ -44,13 +44,15 @@ Ported 1:1 from upstream:
 - Log level filtering and redaction of sensitive headers (`authorization`,
   `proxy-authorization`, `x-api-key`)
 
-Added on the Kotlin/Android side, with no upstream counterpart:
+Added on the Kotlin side, with no upstream counterpart:
 
 - `ProxySpec` -- HTTP and SOCKS5 proxying. Ktor's `ProxyConfig` carries no
   credentials (on the JVM it is `java.net.Proxy`), so proxy authentication drops
   down to OkHttp's `proxyAuthenticator` to answer the 407 challenge
-- An `expect`/`actual` `defaultHttpClient`, because the HTTP engine is
-  platform-specific
+- A JVM target alongside Android, so the library is usable from a server as well
+  as from an app. `defaultHttpClient` consequently lives in `commonMain` with no
+  `expect`/`actual` split: OkHttp serves both targets, and Kotlin does not permit
+  a source set shared between JVM and Android targets in any case
 - Kotlin naming for fields such as `ModelCard.releaseDate`, which maps 1:1 onto
   the upstream `release_date`
 

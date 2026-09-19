@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.ufec"
-version = "0.1.0"
+version = "0.2.0"
 
 kotlin {
     android {
@@ -17,6 +17,12 @@ kotlin {
         // commonTest is silently not executed.
         withHostTest {}
     }
+
+    // The library is named `-kotlin`, not `-android`, and the upstream JavaScript
+    // SDK runs anywhere Node does. A JVM target keeps that promise: the same code
+    // runs on a server, and it gives examples/ something it can actually execute
+    // from the command line.
+    jvm()
 
     // KMP's android target does not inherit the Java version configured on the
     // Android plugin; it defaults to the build JDK's target (bytecode 70.0 on a
@@ -35,12 +41,12 @@ kotlin {
             // TypeSafeClient accepts an injected HttpClient for testing, which puts
             // the Ktor core types on the API surface as well.
             api(libs.ktor.client.core)
-        }
 
-        // The HTTP engine is platform-specific: the OkHttp engine only runs on
-        // JVM/Android, so it lives in androidMain and reaches commonMain through
-        // expect/actual.
-        androidMain.dependencies {
+            // The OkHttp engine backs both of this project's targets, so it belongs
+            // here rather than in a platform-specific source set. It cannot simply
+            // live in a source set shared by android and jvm: Kotlin does not
+            // support sharing a source set between JVM and Android targets at all.
+            // See the note on defaultHttpClient.
             implementation(libs.ktor.client.okhttp)
         }
 

@@ -34,7 +34,7 @@ Then depend on a tag:
 ```kotlin
 // build.gradle.kts
 dependencies {
-    implementation("com.github.ufec.typesafe-sdk-kotlin:typesafe-sdk-kotlin:v0.1.0")
+    implementation("com.github.ufec.typesafe-sdk-kotlin:typesafe-sdk-kotlin:v0.2.0")
 }
 ```
 
@@ -42,7 +42,10 @@ JitPack names artifacts `com.github.<user>.<repo>:<module>`, so the group repeat
 the repository name. The Android variant
 (`com.github.ufec.typesafe-sdk-kotlin:typesafe-sdk-kotlin-android`) comes along
 transitively through Gradle module metadata, so there is nothing else to
-declare. Requires Android `minSdk` 29 and a JDK 17 toolchain.
+declare. A `-jvm` variant is published too, and a plain JVM project resolves it
+from the same coordinate.
+
+Targets Android (`minSdk` 29) and the JVM. Both need a JDK 17 toolchain.
 
 ## Quickstart
 
@@ -71,6 +74,23 @@ println(answer.confidence)   // 0.97
 Answer types are derived from the questions, so `result.answer(category)` comes
 back as a `ChoiceAnswer` without a cast. The client is `AutoCloseable`; call
 `close()` when you are done with it.
+
+## Example
+
+There is a runnable demo in [`examples/`](examples), the counterpart of the
+upstream JavaScript SDK's `npm run demo`:
+
+```sh
+export TYPESAFE_API_KEY=ts_...
+./gradlew :examples:run
+```
+
+It lists the available models, then classifies a support ticket with one noul,
+one choice, and two score questions. Letting the exception escape would bury the
+one useful line under a Gradle failure block, so a bad key prints
+`API error 401 (request <id>): ...` and the build still succeeds.
+
+The demo is compiled by `./gradlew build`, so it cannot silently rot.
 
 ## Question types
 
