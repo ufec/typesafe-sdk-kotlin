@@ -18,7 +18,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io") { content { includeGroup("com.github.ufec") } }
+        // JitPack serves this project under com.github.ufec.typesafe-sdk-kotlin,
+        // which is a *subgroup* of com.github.ufec. An exact includeGroup filter
+        // on com.github.ufec would exclude the group that actually carries the
+        // Android variant, and the dependency would fail to resolve.
+        maven("https://jitpack.io") {
+            content { includeGroupByRegex("com\\.github\\.ufec.*") }
+        }
     }
 }
 ```
@@ -28,11 +34,13 @@ Then depend on a tag:
 ```kotlin
 // build.gradle.kts
 dependencies {
-    implementation("com.github.ufec:typesafe-sdk-kotlin:v0.1.0")
+    implementation("com.github.ufec.typesafe-sdk-kotlin:typesafe-sdk-kotlin:v0.1.0")
 }
 ```
 
-The Android artifact (`com.github.ufec:typesafe-sdk-kotlin-android`) comes along
+JitPack names artifacts `com.github.<user>.<repo>:<module>`, so the group repeats
+the repository name. The Android variant
+(`com.github.ufec.typesafe-sdk-kotlin:typesafe-sdk-kotlin-android`) comes along
 transitively through Gradle module metadata, so there is nothing else to
 declare. Requires Android `minSdk` 29 and a JDK 17 toolchain.
 
