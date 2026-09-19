@@ -26,11 +26,22 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      # The Gradle build needs a matching Android platform installed. Licenses are
-      # accepted by default on GitHub runners, and AGP downloads anything else it
-      # needs (build-tools, platform-tools) on its own.
-      - uses: android-actions/setup-android@v3
-      - run: sdkmanager 'platforms;android-37'
+      # Pinned to v4: v3 runs on Node20, which GitHub is retiring. v4 also
+      # bundles cmdline-tools 20.0, which is what knows about the newer
+      # platforms.
+      - uses: android-actions/setup-android@v4
+
+      # The build needs a matching Android platform installed. Licenses are
+      # accepted by default on GitHub runners, and AGP downloads anything else
+      # it needs (build-tools, platform-tools) on its own. Echo the SDK location
+      # so a failure here names the cause instead of leaving it implicit.
+      - name: Install the Android platform
+        run: |
+          echo "ANDROID_HOME=${ANDROID_HOME:-unset}"
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-unset}"
+          sdkmanager --list_installed | head -30
+          sdkmanager --install 'platforms;android-37'
+          sdkmanager --list_installed | grep -F 'platforms;android-37'
 
       - name: Build and run the test suite
         run: ./gradlew build --stacktrace --console=plain
