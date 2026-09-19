@@ -123,6 +123,28 @@ val client = TypeSafeClient(
 Unlike upstream, this SDK never reads the ambient environment. There is no
 `process.env` equivalent on Android, so the API key must be passed explicitly.
 
+## Data and credentials
+
+This is a client for a hosted API, so whatever you pass as `state` is sent to
+TypeSafe. That is the point of the library, but it is worth stating plainly: an
+application that forwards message bodies, documents, or user input to Jev is
+sending that content to a third party.
+
+Nothing else about the host is collected. Each request carries the API key, a
+`User-Agent` naming this SDK and its version, a runtime descriptor
+(`kotlin/unknown` unless the caller sets something more useful, such as
+`android/15`), and, on a retry, the retry count.
+
+The API key lives in memory for the lifetime of the client and travels only in
+the `Authorization` header. This library never writes it to disk: persisting it
+is the host application's decision, which is why `examples/` reads it from the
+`TYPESAFE_API_KEY` environment variable instead.
+
+Log output masks credential headers before they reach the logger.
+`authorization`, `proxy-authorization`, and `x-api-key` keep their scheme and,
+for secrets longer than eight characters, their last four characters;
+`cookie` and `set-cookie` are masked entirely. A proxy password is never logged.
+
 ## Errors
 
 Every failure derives from `TypeSafeException`:
