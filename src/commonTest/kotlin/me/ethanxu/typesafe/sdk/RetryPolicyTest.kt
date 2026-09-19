@@ -1,12 +1,11 @@
 package me.ethanxu.typesafe.sdk
 
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.Test
 
 class RetryPolicyTest {
-
     private companion object {
         /**
          * Epoch milliseconds for `Wed, 21 Oct 2026 07:28:00 GMT`, derived

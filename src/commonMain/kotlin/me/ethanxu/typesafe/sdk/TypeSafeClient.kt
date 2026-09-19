@@ -12,6 +12,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -20,7 +21,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlin.random.Random
-import kotlinx.io.IOException
 
 /**
  * Client for the TypeSafe AI API. A Kotlin port of `TypeSafeClient` from
@@ -46,7 +46,6 @@ class TypeSafeClient(
     private val config: TypeSafeConfig,
     private val http: HttpClient = defaultHttpClient(config.timeoutMs, config.proxy),
 ) : AutoCloseable {
-
     private val logger: TypeSafeLogger = config.logger.atLevel(config.logLevel)
 
     /**

@@ -16,9 +16,9 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.test.Test
 
 private val category = QuestionId(
     name = "category",
@@ -51,8 +51,10 @@ private fun MockRequestHandleScope.jsonResponse(
     content = content,
     status = status,
     headers = headersOf(
-        *(listOf(HttpHeaders.ContentType to listOf("application/json")) +
-            extraHeaders.map { it.key to listOf(it.value) }).toTypedArray(),
+        *(
+            listOf(HttpHeaders.ContentType to listOf("application/json")) +
+                extraHeaders.map { it.key to listOf(it.value) }
+        ).toTypedArray(),
     ),
 )
 
@@ -66,7 +68,6 @@ private fun testClient(
 )
 
 class TypeSafeClientTest {
-
     // -----------------------------------------------------------------------
     // Happy-path parsing
     // -----------------------------------------------------------------------
@@ -226,7 +227,10 @@ class TypeSafeClientTest {
     @Test
     fun `does not retry non-retryable status`() = runTest {
         var calls = 0
-        val engine = MockEngine { calls++; jsonResponse("""{"message":"gone"}""", HttpStatusCode.NotFound) }
+        val engine = MockEngine {
+            calls++
+            jsonResponse("""{"message":"gone"}""", HttpStatusCode.NotFound)
+        }
 
         runCatching { testClient(engine).systemOne("x") { ask(category) } }
 

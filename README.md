@@ -151,9 +151,23 @@ keeps working.
 
 - [docs/usage.md](docs/usage.md) -- a longer walkthrough of questions, answers,
   retries, proxies, and logging
+- [docs/changelog.md](docs/changelog.md) -- release notes
 - [NOTICE](NOTICE) -- upstream attribution and the divergences from the
   JavaScript SDK
 - [TypeSafe docs](https://docs.typesafe.ai/) -- what TypeSafe itself can do
+
+## Development
+
+```sh
+./gradlew build          # compiles everything, runs ktlint, runs the tests
+./gradlew ktlintCheck    # style only
+./gradlew ktlintFormat   # style only, rewriting files
+```
+
+Style lives in [.editorconfig](.editorconfig), which is ktlint's own
+configuration file -- the counterpart of the upstream JavaScript SDK's
+`biome.json`. The base is ktlint's `ktlint_official` style with its line-breaking
+rules turned off; the file records which ones and why.
 
 ## License
 

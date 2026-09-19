@@ -36,7 +36,6 @@ open class APIException(
     val response: APIErrorResponse,
     message: String,
 ) : TypeSafeException(message) {
-
     val status: Int get() = response.status
     val body: JsonElement? get() = response.body
     val requestId: String? get() = response.requestId
@@ -124,24 +123,34 @@ open class APIException(
 }
 
 /** HTTP 400: the request was malformed. */
-class BadRequestException(response: APIErrorResponse, message: String) :
-    APIException(response, message)
+class BadRequestException(
+    response: APIErrorResponse,
+    message: String,
+) : APIException(response, message)
 
 /** HTTP 401: authentication failed. */
-class AuthenticationException(response: APIErrorResponse, message: String) :
-    APIException(response, message)
+class AuthenticationException(
+    response: APIErrorResponse,
+    message: String,
+) : APIException(response, message)
 
 /** HTTP 403: the caller is not allowed to perform this request. */
-class PermissionDeniedException(response: APIErrorResponse, message: String) :
-    APIException(response, message)
+class PermissionDeniedException(
+    response: APIErrorResponse,
+    message: String,
+) : APIException(response, message)
 
 /** HTTP 404: the resource does not exist. */
-class NotFoundException(response: APIErrorResponse, message: String) :
-    APIException(response, message)
+class NotFoundException(
+    response: APIErrorResponse,
+    message: String,
+) : APIException(response, message)
 
 /** HTTP 422: the request body failed validation. */
-class UnprocessableEntityException(response: APIErrorResponse, message: String) :
-    APIException(response, message)
+class UnprocessableEntityException(
+    response: APIErrorResponse,
+    message: String,
+) : APIException(response, message)
 
 /** HTTP 429: rate limited. */
 class RateLimitException(
@@ -152,8 +161,10 @@ class RateLimitException(
 ) : APIException(response, message)
 
 /** HTTP 5xx: the server failed to handle the request. */
-class InternalServerException(response: APIErrorResponse, message: String) :
-    APIException(response, message)
+class InternalServerException(
+    response: APIErrorResponse,
+    message: String,
+) : APIException(response, message)
 
 /**
  * The request or response body failed in transit (DNS, TLS, dropped connection).

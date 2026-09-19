@@ -3,6 +3,7 @@ plugins {
     // classpath via the root project's kotlin.multiplatform plugin, and asking
     // for a versioned alias of a sibling plugin from the same artifact fails.
     id("org.jetbrains.kotlin.jvm")
+    alias(libs.plugins.ktlint)
     application
 }
 

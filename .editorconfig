@@ -1,0 +1,46 @@
+# ktlint reads this file, so it is the configuration point for the Kotlin style
+# rules -- the counterpart of the upstream JavaScript SDK's biome.json.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.{md,yml,yaml,json,toml}]
+indent_size = 2
+
+[*.{kt,kts}]
+ktlint_code_style = ktlint_official
+
+# 140 is ktlint_official's own default and is kept rather than tightened. The
+# sources peak at 129 columns, so adopting the linter reformats nothing on this
+# account: a style change should not arrive tangled up with a mechanical diff
+# nobody reads.
+max_line_length = 140
+
+# ktlint_official's line-breaking rules are turned off as a group. They reflow
+# code to fit a width the source already respects, and the result reads worse.
+#
+# The clearest case is a test function. ktlint rewrites
+#
+#     fun `an answer is parsed`() = runTest {
+#
+# into
+#
+#     fun `an answer is parsed`() =
+#         runTest {
+#
+# which adds an indentation level to the whole body and a wrapped signature, for
+# every one of the seventeen tests. Applying the full ruleset rewrote twelve
+# files, 682 lines in a single test file, and none of it was an improvement.
+#
+# These are the rules that actually fired. Every other rule in ktlint_official's
+# standard ruleset is still enforced.
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_argument-list-wrapping = disabled

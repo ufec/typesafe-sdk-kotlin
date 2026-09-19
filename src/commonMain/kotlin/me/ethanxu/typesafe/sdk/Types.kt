@@ -35,7 +35,6 @@ class SystemOneResult internal constructor(
     val answers: Map<String, Answer>,
     val usage: Usage,
 ) {
-
     /**
      * Retrieves the answer for [id].
      *

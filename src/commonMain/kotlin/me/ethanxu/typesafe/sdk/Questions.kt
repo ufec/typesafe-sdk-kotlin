@@ -17,7 +17,6 @@ import kotlinx.serialization.json.buildJsonObject
  * level while remaining a `Record<string, Answer>` at runtime.
  */
 sealed class Question<A : Answer> {
-
     /** Matches the `type` field of the returned answer. */
     abstract val type: String
 
@@ -47,7 +46,6 @@ class NoulQuestion(
     override val instructions: EntryType = null,
     val criteria: NoulCriteria? = null,
 ) : Question<NoulAnswer>() {
-
     override val type: String get() = NoulAnswer.TYPE
 
     override fun toJson(): JsonObject = buildJsonObject {
@@ -78,7 +76,6 @@ class ChoiceQuestion(
     override val instructions: EntryType,
     val criteria: Map<String, EntryType>,
 ) : Question<ChoiceAnswer>() {
-
     override val type: String get() = ChoiceAnswer.TYPE
 
     override fun toJson(): JsonObject = buildJsonObject {
@@ -111,7 +108,6 @@ class ScoreQuestion(
     override val instructions: EntryType,
     val criteria: List<EntryType>,
 ) : Question<ScoreAnswer>() {
-
     override val type: String get() = ScoreAnswer.TYPE
 
     override fun toJson(): JsonObject = buildJsonObject {
@@ -214,8 +210,9 @@ fun score(
 /**
  * Incremental builder used by the lambda form of [TypeSafeClient.systemOne].
  */
-class SystemOneRequestBuilder internal constructor(private val state: EntryType) {
-
+class SystemOneRequestBuilder internal constructor(
+    private val state: EntryType,
+) {
     private val questions = LinkedHashMap<String, Question<*>>()
 
     /** Overrides the model for this call; defaults to the client's `defaultModel` when unset. */

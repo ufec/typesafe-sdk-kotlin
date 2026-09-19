@@ -2,7 +2,11 @@ package me.ethanxu.typesafe.sdk
 
 /** Log levels, ordered from most to least verbose. Mirrors upstream `LOG_LEVELS`. */
 enum class LogLevel {
-    DEBUG, INFO, WARN, ERROR, OFF;
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR,
+    OFF,
 }
 
 /** Default log level. Mirrors upstream `DEFAULT_LOG_LEVEL`. */
@@ -17,16 +21,22 @@ val DEFAULT_LOG_LEVEL: LogLevel = LogLevel.WARN
  */
 interface TypeSafeLogger {
     fun debug(message: String)
+
     fun info(message: String)
+
     fun warn(message: String, throwable: Throwable? = null)
+
     fun error(message: String, throwable: Throwable? = null)
 }
 
 /** A logger that discards everything. The SDK default: silence beats an unexpected logcat line. */
 object NoOpLogger : TypeSafeLogger {
     override fun debug(message: String) = Unit
+
     override fun info(message: String) = Unit
+
     override fun warn(message: String, throwable: Throwable?) = Unit
+
     override fun error(message: String, throwable: Throwable?) = Unit
 }
 
