@@ -1,0 +1,69 @@
+# git-cliff configuration.
+#
+# The output shape is not git-cliff's default. It matches the upstream JavaScript
+# SDK's docs/changelog.md, which .github/scripts/release_notes.py parses: a
+# `## <tag> (<yyyy-mm-dd>)` heading, optional `### <Group>` sections, and one
+# bullet per commit.
+#
+# Adding a release, immediately before you tag it:
+#
+#   git-cliff --unreleased --tag v0.3.0 --prepend docs/changelog.md
+#
+# That inserts the new section directly beneath the `# Changelog` heading and
+# leaves the older entries untouched, so a hand-written note on an old release
+# survives. `--prepend` insists on `--unreleased` or `--latest`; it is built for
+# adding one release, not for rewriting the whole file.
+#
+# Two settings below exist only to reproduce the expected spacing, and both were
+# arrived at by experiment rather than guesswork:
+#
+#   - trim = false. With trimming on, git-cliff re-joins the rendered entries
+#     itself with a single newline, and consecutive release headings end up
+#     touching, because the blank line between them belongs to the entry.
+#   - The body template ends with a newline for the same reason: in `--prepend`
+#     mode that newline becomes the blank line separating the new entry from the
+#     one below it.
+
+[changelog]
+header = "# Changelog\n"
+body = """{% if version %}\
+## {{ version }} ({{ timestamp | date(format="%Y-%m-%d") }})
+{% else %}\
+## Unreleased
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group }}
+
+{% for commit in commits %}- {{ commit.message | split(pat="\n") | first | trim }}
+{% endfor %}{% endfor %}
+"""
+footer = ""
+trim = false
+
+[git]
+conventional_commits = true
+# Conventional or not, nothing is dropped silently: an unconventional subject
+# lands in "Other" rather than vanishing, because a changelog that quietly omits
+# work is worse than one with an untidy entry.
+filter_unconventional = false
+split_commits = false
+protect_breaking_commits = false
+filter_commits = false
+tag_pattern = "v[0-9]+\\.[0-9]+\\.[0-9]+"
+sort_commits = "oldest"
+
+commit_parsers = [
+  { message = "^feat", group = "Added" },
+  { message = "^fix", group = "Fixed" },
+  { message = "^perf", group = "Changed" },
+  { message = "^refactor", group = "Changed" },
+  { message = "^revert", group = "Removed" },
+  { message = "^docs", group = "Documentation" },
+  { message = "^test", skip = true },
+  { message = "^style", skip = true },
+  { message = "^chore\\(release\\)", skip = true },
+  { message = "^chore", skip = true },
+  { message = "^ci", skip = true },
+  { message = "^build", skip = true },
+  { message = ".*", group = "Other" },
+]

@@ -24,3 +24,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Written by .github/scripts/release_notes.py during a release
+/release-notes.md

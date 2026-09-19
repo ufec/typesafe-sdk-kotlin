@@ -19,6 +19,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # Runs first because it needs nothing but the checkout, and a malformed
+      # changelog entry is cheapest to find before anything is built. The same
+      # script reads the changelog on release day to fill in the GitHub release
+      # notes, so this also proves the release will not fail there.
+      - name: Check the changelog
+        run: python3 .github/scripts/release_notes.py --check
+
       - uses: actions/setup-java@v5
         with:
           distribution: zulu

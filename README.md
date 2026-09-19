@@ -169,6 +169,30 @@ configuration file -- the counterpart of the upstream JavaScript SDK's
 `biome.json`. The base is ktlint's `ktlint_official` style with its line-breaking
 rules turned off; the file records which ones and why.
 
+## Releasing
+
+Releases are tags. JitPack builds whatever tag is asked for, so there is nothing
+to upload; what a release adds is a GitHub release whose notes come from the
+changelog.
+
+Immediately before tagging, draft the entry from the commits since the last
+release:
+
+```sh
+git-cliff --unreleased --tag v0.3.0 --prepend docs/changelog.md
+```
+
+git-cliff is configured by [cliff.toml](cliff.toml). Read the entry it produced
+and edit it: the commits know what changed, not why it mattered.
+
+Then bump `version` in [build.gradle.kts](build.gradle.kts), commit, and push the
+tag. The [release workflow](.github/workflows/release.yml) builds the tagged
+commit, checks that the tag agrees with `version` and that the changelog has a
+matching entry, and creates the GitHub release from it.
+
+The changelog is checked on every push too, by the same script, so a malformed
+entry is caught when it is written rather than on release day.
+
 ## License
 
 MIT. This port retains the upstream TypeSafe copyright as required by the MIT
